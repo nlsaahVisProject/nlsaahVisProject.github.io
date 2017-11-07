@@ -1,0 +1,40 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: auto;
+    position: relative;
+    width: 960px;
+}
+
+.label {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+/*div {*/
+/*float: left;*/
+/*clear: both;*/
+/*}*/
+
+.group text {
+    font: 11px sans-serif;
+    pointer-events: none;
+}
+
+.group path {
+    stroke: #000;
+}
+
+path.chord {
+    stroke-width: .75;
+    fill-opacity: .75;
+}
+
+.center-clear {
+    text-align: center;
+    clear: both;
+}
+
+#center-menu {
+    color: red;
+}
