@@ -212,7 +212,7 @@ var wave_questions={"wave_1": {
 		"H3HS_AccessToHealthServices":{
 			"H3HS1":"Over the past 12 months, how many months did you have health insurance?",
 			"H3HS3":"Over the past 12 months, were you offered health insurance through work or school?",
-			"H3HS7":"Has there been any time in the past 12 months when you thought you should get medical care, but you did not?",
+			"H3HS6":"Has there been any time in the past 12 months when you thought you should get medical care, but you did not?",
 			"H3HS11":"How long ago did you last consult a doctor or nurse?"
 		},
 		"H3TO_TobaccoAlcoholDrugs":{
