@@ -77,7 +77,7 @@ var waveCSVdata=d3.csvParse(waveCSV,
 
 var drawPC=function(wavedata, svg, theKeys){
     
-    theMaxValueOfPC = 0.0;
+    thePotValueOfPC = {};
 
     // svg.brushMode("1D-axes");
 
@@ -88,17 +88,22 @@ var drawPC=function(wavedata, svg, theKeys){
     dimensions = theKeys.filter(function(d) {
         return (y[d] = d3.scaleLinear()
             .domain(d3.extent(wavedata, function(p) { 
-                if (theMaxValueOfPC < p[d]) {
-                    theMaxValueOfPC = p[d];
+                if (thePotValueOfPC[d] == undefined) {
+                    thePotValueOfPC[d] = {'max':parseFloat(p[d]), 'min':parseFloat(p[d])};
                 }
+
+                if (thePotValueOfPC[d].max < parseFloat(p[d])) {
+                    thePotValueOfPC[d].max = parseFloat(p[d]);
+                } else if (thePotValueOfPC[d].min > parseFloat(p[d])) {
+                    thePotValueOfPC[d].min = parseFloat(p[d]);
+                }
+
                 return +p[d];
             }))
             .range([height, 0]));
     });
     x.domain(dimensions)
 
-
-    theMaxValueOfPC = parseFloat(theMaxValueOfPC);
 
     // x.domain(dimensions = theKeys.filter(function(d) {
     //     return (y[d] = d3.scaleLinear()
@@ -187,11 +192,14 @@ function brushstart() {
 }
 
 
-function pcBrushCompare(dim, extent) {
-    var e0 = parseFloat(theMaxValueOfPC) - (parseFloat(theMaxValueOfPC / height) * parseFloat(extent[0]));
-    var e1 = parseFloat(theMaxValueOfPC) - (parseFloat(theMaxValueOfPC / height) * parseFloat(extent[1]));
+function pcBrushCompare(dim, val, extent) {
 
-    return e1 <= parseFloat(dim) && parseFloat(dim) <= e0;
+    var difference = thePotValueOfPC[dim].max - thePotValueOfPC[dim].min;
+
+    var e0 = parseFloat(difference) - (parseFloat(difference / height) * parseFloat(extent[0])) + thePotValueOfPC[dim].min;
+    var e1 = parseFloat(difference) - (parseFloat(difference / height) * parseFloat(extent[1])) + thePotValueOfPC[dim].min;
+
+    return e1 <= parseFloat(val) && parseFloat(val) <= e0;
 }
 
 
@@ -212,8 +220,7 @@ function brush() {
 
     foreground.style("display", function(d) {
         return actives.every(function(p, i) {
-            return pcBrushCompare(d[p.dimension], p.extent);
-
+            return pcBrushCompare(p.dimension, d[p.dimension], p.extent);
         }) ? null : "none";
     });
 }
