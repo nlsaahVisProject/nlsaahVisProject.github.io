@@ -1,0 +1,21 @@
+{
+  "name": "top",
+  "children": [
+    {
+      "name": "Wave 1", "link": "wave1/sunburst_wave1.html",
+      "children": [{"name": "total", "size": 890175}]
+    },
+    {
+      "name": "Wave 2", "link": "wave2/sunburst_wave2.html",
+      "children": [{"name": "total", "size": 964700}]
+    },
+    {
+      "name": "Wave 3", "link": "wave3/sunburst_wave3.html",
+      "children": [{"name": "total", "size": 1342791}]
+    },
+    {
+      "name": "Wave 4", "link": "wave4/sunburst_wave4.html",
+      "children": [{"name": "total", "size": 1147104}]
+    }
+  ]
+}
