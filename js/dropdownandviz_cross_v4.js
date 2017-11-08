@@ -2,26 +2,37 @@
 var wavequestions_data = eval(wave_questions); 
 
 var genreateSelector = function(sectionDiv, index,wave) {
-	var section_group = document.getElementById(sectionDiv);
+    var section_group = document.getElementById(sectionDiv);
 
-	var selectList_sectionlevel = document.createElement("select");
-	selectList_sectionlevel.id = "section_dropdown" + index;
-	section_group.appendChild(selectList_sectionlevel);
+    // var selectList_sectionlevel = document.createElement("select");
+    // selectList_sectionlevel.id = "section_dropdown" + index;
+    if($("#" + "section_dropdown"+index).length == 0){
+            var selectList_sectionlevel = document.createElement("select");
+            selectList_sectionlevel.id = "section_dropdown"+index;
+    }
+    else{
+            var selectList_sectionlevel=document.getElementById("section_dropdown"+index);
+            $("#section_dropdown"+index).empty();
+            if($("#" + "question_dropdown"+index).length != 0){
+                 $("#question_dropdown"+index).remove();
+            }
+    }
+    section_group.appendChild(selectList_sectionlevel);
     var unselected_option = document.createElement("option");
     unselected_option.value = "no selected";
     unselected_option.text="no selected";
     selectList_sectionlevel.appendChild(unselected_option);
     selectList_sectionlevel.setAttribute("onchange","questionvaluefunction(this,"+index+",'"+wave+"','"+sectionDiv+"')")
-	for (var sectionkey in wavequestions_data[wave]) {
-		    var option = document.createElement("option");
-		    option.value = sectionkey;
-		    option.text = sectionkey;
-		    selectList_sectionlevel.appendChild(option);				 
-	}
-		
+    for (var sectionkey in wavequestions_data[wave]) {
+            var option = document.createElement("option");
+            option.value = sectionkey;
+            option.text = sectionkey;
+            selectList_sectionlevel.appendChild(option);                 
+    }
+        
     // $("#" + NAME).change(function () {
         
-	// $("#section_dropdown" + index).change();
+    // $("#section_dropdown" + index).change();
 }
 
 var sessionvaluefunction=function(obj,index,dropdown_wavediv){
@@ -35,7 +46,7 @@ var sessionvaluefunction=function(obj,index,dropdown_wavediv){
 
 var questionvaluefunction=function(obj,index,wave,section_dropdown){
        // $("question_dropdown"+index).empty();
-		        
+                
         //Create and append select list
         var section = obj.value;
         if($("#" + "question_dropdown"+index).length == 0){
@@ -59,7 +70,7 @@ var questionvaluefunction=function(obj,index,wave,section_dropdown){
             selectList_questionlevel.appendChild(option);                
         }
       
-	};
+    };
 
 
 
