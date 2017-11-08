@@ -1,0 +1,49 @@
+#spm div {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: auto;
+    position: relative;
+    width: 960px;
+}
+
+#spm svg {
+    font: 10px sans-serif;
+    padding: 10px;
+}
+
+#spm .axis,
+#spm .frame {
+    shape-rendering: crispEdges;
+}
+
+#spm .axis line {
+    stroke: #ddd;
+}
+
+#spm .axis path {
+    display: none;
+}
+
+#spm .cell text {
+    font-weight: bold;
+    text-transform: capitalize;
+    fill: black;
+}
+
+#spm .frame {
+    fill: none;
+    stroke: #aaa;
+}
+
+#spm  circle {
+    fill-opacity: .7;
+}
+
+#spm circle.hidden {
+    fill: #ccc !important;
+}
+
+#spm .extent {
+    fill: #000;
+    fill-opacity: .125;
+    stroke: #fff;
+}

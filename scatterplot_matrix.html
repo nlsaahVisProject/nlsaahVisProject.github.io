@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Scatterplot Matrix</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="js/drawScatterPlotMatrix.js"></script>
+    <link rel="stylesheet" href="css/scatterplot.css">
+    <title>ScatterPlot Matrix</title>
+</head>
+
+<body>
+
+<svg class="center-clear" id="w1"></svg>
+
+<script>
+    featuresIn = ["H1DA5","H1DA6","H1DA7","H1DA8"];
+    classIn = ["C_CRP"];
+    sizeIn = 230;
+    drawScatterPlotMatrix("data/wave1.csv", "#w1", featuresIn, classIn, sizeIn);
+</script>
+
+</body>
+</html>
