@@ -1,0 +1,170 @@
+var DrawSC = function () {
+    var newSC = {
+
+        drawScatterPlotMatrix: function (data, svgIn, featuresIn, classIn, sizeIn){
+
+            var size = sizeIn,
+                padding = 20,
+                color = d3.scaleOrdinal(d3.schemeCategory20);
+
+            var x = d3.scaleLinear()
+                .range([padding / 2, size - padding / 2]);
+
+            var y = d3.scaleLinear()
+                .range([size - padding / 2, padding / 2]);
+
+            var xAxis = d3.axisBottom()
+                .scale(x)
+                .ticks(6);
+
+            var yAxis = d3.axisLeft()
+                .scale(y)
+                .ticks(6);
+
+            var xJitter = function(d) { return (x(d)) + Math.random()*2.5};
+
+            var domainByTrait = {},
+                n = featuresIn.length;
+
+            featuresIn.forEach(function(trait) {
+                domainByTrait[trait] = d3.extent(data, function(d) { return d[trait]; })
+            });
+
+            xAxis.tickSize(size * n);
+            yAxis.tickSize(-size * n);
+
+            var brush = d3.brush()
+                .on("start", brushstart)
+                .on("brush", brushmove)
+                .on("end", brushend)
+                .extent([[0,0],[size,size]]);
+
+            var svg = d3.select(svgIn)
+                .attr("width", size * n + padding)
+                .attr("height", size * n + padding)
+                .append("g")
+                .attr("transform", "translate(" + padding + "," + padding / 2 + ")")
+                .call(d3.zoom().on("zoom", function () {
+                    svg.attr("transform", d3.event.transform)
+                }))
+                //Double click to reset zoom
+                .on("dblclick.zoom", function () {
+                    svg.attr("transform", d3.zoomIdentity)
+                });
+
+
+            svg.selectAll(".x.axis")
+                .data(featuresIn)
+                .enter().append("g")
+                .attr("class", "x axis")
+                .attr("transform", function(d, i) { return "translate(" + (n - i - 1) * size + ",0)"; })
+                .each(function(d) { x.domain(domainByTrait[d]); d3.select(this).call(xAxis); });
+
+            svg.selectAll(".y.axis")
+                .data(featuresIn)
+                .enter().append("g")
+                .attr("class", "y axis")
+                .attr("transform", function(d, i) { return "translate(0," + i * size + ")"; })
+                .each(function(d) { y.domain(domainByTrait[d]); d3.select(this).call(yAxis); });
+
+            var cell = svg.selectAll(".cell")
+                .data(cross(featuresIn, featuresIn))
+                .enter().append("g")
+                .attr("class", "cell")
+                .attr("transform", function(d) { return "translate(" + (n - d.i - 1) * size + "," + d.j * size + ")"; })
+                .each(plot);
+
+            // Titles for the diagonal.
+            cell.filter(function(d) { return d.i === d.j; }).append("text")
+                .attr("x", padding)
+                .attr("y", padding)
+                .attr("dy", ".71em")
+                .text(function(d) { return d.x; });
+
+            cell.call(brush);
+
+            function plot(p) {
+                var cell = d3.select(this);
+
+                x.domain(domainByTrait[p.x]);
+                y.domain(domainByTrait[p.y]);
+
+                cell.append("rect")
+                    .attr("class", "frame")
+                    .attr("x", padding / 2)
+                    .attr("y", padding / 2)
+                    .attr("width", size - padding)
+                    .attr("height", size - padding);
+
+                cell.selectAll("circle")
+                    .data(data)
+                    .enter().append("circle")
+                    .attr("cx", function(d) { return xJitter(d[p.x]); })
+                    .attr("cy", function(d) { return y(d[p.y]); })
+                    .attr("r", 4)
+                    .style("fill", function(d) { return color(d[classIn[0]]); });
+            }
+
+            var brushCell;
+
+            // Clear the previously-active brush, if any.
+            function brushstart(p) {
+                if (brushCell !== this) {
+                    d3.select(brushCell).call(brush.move, null);
+                    brushCell = this;
+                    x.domain(domainByTrait[p.x]);
+                    y.domain(domainByTrait[p.y]);
+                }
+            }
+
+            // Highlight the selected circles.
+            function brushmove(p) {
+                var e = d3.brushSelection(this);
+                svg.selectAll("circle").classed("hidden", function(d) {
+                    return !e
+                        ? false
+                        : (
+                            e[0][0] > x(+d[p.x]) || x(+d[p.x]) > e[1][0]
+                            || e[0][1] > y(+d[p.y]) || y(+d[p.y]) > e[1][1]
+                        );
+                });
+            }
+
+            // If the brush is empty, select all circles.
+            function brushend() {
+                var e = d3.brushSelection(this);
+                if (e === null) svg.selectAll(".hidden").classed("hidden", false);
+            }
+
+            var legend = svg.selectAll(".legend")
+                .data(color.domain())
+                .enter().append("g")
+                .attr("class", "legend")
+                .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+            // draw legend colored rectangles
+            legend.append("rect")
+                .attr("x", ((size + padding) * featuresIn.length) - ((padding)*featuresIn.length)+padding)
+                .attr("y", size - 200)
+                .attr("width", 80)
+                .attr("height", 20)
+                .style("fill", color);
+
+            // draw legend text
+            legend.append("text")
+                .attr("x", (4 + ((size + padding) * featuresIn.length) - ((padding)*featuresIn.length)+padding))
+                .attr("y", size - 190)
+                .attr("dy", ".35em")
+                .style("text-anchor", "start")
+                .text(function(d) { return "C_CRP Class: " + d;})
+
+            function cross(a, b) {
+                var c = [], n = a.length, m = b.length, i, j;
+                for (i = -1; ++i < n;) for (j = -1; ++j < m;) c.push({x: a[i], i: i, y: b[j], j: j});
+                return c;
+            }
+        }
+
+    };
+    return newSC;
+};

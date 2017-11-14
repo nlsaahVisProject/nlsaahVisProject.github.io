@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunburst - Top Level</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="js/sunburst_top.js"></script>
+    <link rel="stylesheet" href="css/sunburst.css">
+    <link rel="stylesheet" href="css/general.css">
+
+</head>
+<body>
+
+    <div>
+        <label><input class="topInput" type="radio" name="mode" value="size" checked> Size</label>
+        <label><input class="topInput" type="radio" name="mode" value="count"> Count</label>
+        <svg id="top" class="svg"></svg>
+    </div>
+
+    <script>
+        var SB = Sunburst();
+        var dimensions = {width: 960, height: 1000};
+        SB.drawSunburst("data/top_level.json", "#top", ".topInput", dimensions);
+    </script>
+
+</body>
+</html>

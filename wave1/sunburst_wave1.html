@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <Title>Wave 1 Sunburst</Title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/sunburst_bilevel.css">
+    <script type="text/javascript" src="../js/sunburst_bilevel_partition.js"></script>
+    <script type="text/javascript" src="../js/linked_button.js"></script>
+    <script type="text/javascript" src="../js/sunburst_legend.js"></script>
+
+</head>
+<body>
+
+<div class="legend1">
+    <script>
+        var legVals = ["Tobacco, Drugs, Alchohol", "Access to Healthcare", "Daily Activities", "General Health"];
+        var params = {
+            values: legVals,
+            color: d3.scale.ordinal()
+//                d3.scaleOrdinal() //v4 safe with this change
+                    .domain(legVals)
+                    .range(["#9367BB", "#D42E31", "#FE812A", "#30A033"]),
+            divClass: ".legend1",
+            svgDims: {width: 200, height: 120}
+        };
+
+        drawLegend(params);
+    </script>
+</div>
+
+<div>
+    <svg id="wave1"></svg>
+    <script>
+
+        var SBW1 = SunburstBiLevel();
+        SBW1.drawSunburstBiLevel("../data/wave1.json", "#wave1");
+
+    </script>
+</div>
+
+<div>
+    <!--v4 safe-->
+    <svg id="button"></svg>
+    <script>
+        drawLinkedButton("#button", 960, 200, 100, 200, "explore_wave1.html", "Explore Wave 1");
+    </script>
+</div>
+
+
+</body>
+</html>
